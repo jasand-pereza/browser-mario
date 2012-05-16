@@ -60,11 +60,21 @@
        
        var globalBlockCount = 0;
        
+       
+       
        /* creates a block element*/
        /* Arguments: width, height, left, top, breakable */
        function BlockElement(w, h, l, t, b) {
+          
           var tempBlock= document.createElement('div');
-          var breakable = 'noBreak';
+          this.breakable = 'noBreak';
+          this.bWidth = w;
+          this.bHeight = h;
+          this.bLeft = l;
+          this.bTop = t;
+          this.bBreakable = b;
+          this.thisId = 'bE_' + globalBlockCount;
+          
           if(b) breakable = 'breakable';
           tempBlock.setAttribute('id','bE_' + globalBlockCount);
           tempBlock.setAttribute('class','blockElement '+ breakable);
@@ -73,11 +83,58 @@
           tempBlock.setAttribute('top', t);
           tempBlock.setAttribute('left', l);
           tempBlock.setAttribute('position', 'absolute');
-          globalBlockCount++;
-          return document.body.appendChild(tempBlock);
-       }
+          
+          
+          /* adds the block to the DOM */
+          this.createBlock = function() {
+             globalBlockCount++;
+             return document.body.appendChild(tempBlock);  
+          }
+          
+          
+          /* checks if there is a collision */
+          this.hitsMe = function(a, b) {
+               var hit = false;
+               if((a.offset().top >= b.offset().top + b.height()) &&
+               (a.offset().left <= b.offset().left) ||
+               a.offset().left <= (b.offset().left + b.width())) {
+                    hit =true;
+                    console.log('yes');
+                    if(this.breakable) {
+                         this.breaksMe();
+                    }
+                    else {
+                         this.bumpsMe();
+                    }
+               }
+          }
+          
+          
+          /* bumps the block */
+          this.bumpsMe = function() {
+               $('embed').remove();
+               $('body').append('<embed src="bump.wav" autostart="true" hidden="true" loop="false">');
+          }
+          
+          
+          /* kills the block */
+          this.breaksMe = function() {
+               $('#'+thisId).remove();
+               $('embed').remove();
+               $('body').append('<embed src="brickbreak.wav" autostart="true" hidden="true" loop="false">');
+          }
+     }
+     
+     function globalBlockScanner() {
+          
+     }
+     
+     
        $(function () {
-          blocktest = new BlockElement(78,78,300,130,true);
+          var blocktest = new BlockElement(78,78,300,130,true);
+          blocktest.createBlock();
+          blocktest.hitsMe();
+          
         var xposLeft;
         var currentPlane = 300;
         var inc = 0;
@@ -93,18 +150,9 @@
             timeDirPos[incMe]=$('#mario').offset().left;
             return timeDirPos[incMe-1];
         }
+      
         
-        function hitTest(a, b) {
-            var hit = false;
-            if((a.offset().top >= b.offset().top + b.height()) && (a.offset().left <= b.offset().left) || a.offset().left <= (b.offset().left + b.width())) {
-                hit =true;
-                console.log('yes');
-            }
-            else {
-                hit =false;
-            }
-            return hit;
-        }
+       
        
         
         $('body').keydown(function (event) {
@@ -187,8 +235,7 @@
                                         if($('.bricks').length > 0) {
                                             if(hitTest($('#mario'),$('.bricks'))) {
                                             clearInterval(testHit2);
-                                            $('embed').remove();
-                                             $('body').append('<embed src="bump.wav" autostart="true" hidden="true" loop="false">');
+                                            
                                             }
                                             else {
                                                 clearInterval(testHit2);
@@ -213,8 +260,7 @@
                                         if($('.bricks').length > 0) {
                                             if(hitTest($('#mario'),$('.bricks'))) {
                                             clearInterval(testHit);
-                                            $('embed').remove();
-                                             $('body').append('<embed src="brickbreak.wav" autostart="true" hidden="true" loop="false">');
+                                           
                                             $('.bricks').remove();
                                             }
                                             else {
