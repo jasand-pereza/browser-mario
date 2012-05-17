@@ -110,11 +110,21 @@
           
           
           /* bumps the block */
-          this.bumpsMe = function() {
+          this.bumpsMe = function(block) {
+               this.shake(block);
                $('embed').remove();
                $('body').append('<embed src="bump.wav" autostart="true" hidden="true" loop="false">');
           }
           
+          this.shake = function(block) {
+               
+               var toMoveUp = this.bTop + 6;
+               var toMoveDown = this.bTop - 3;
+               
+               block.delay(150).animate({'top' : toMoveDown},10, function() {
+                    block.animate({'top' : toMoveUp},10)
+                    });
+          }
           
           /* kills the block */
           this.breaksMe = function(block) {
@@ -235,7 +245,7 @@
                          $('body').append('<embed src="smb_jump-super.wav" autostart="true" hidden="true" loop="false">');
                          if(lastInc > 150) /* if the speed is great enough to run and jump */ {
                              //console.info('150 yes');
-                                 if( xpos > tempDirPost) {
+                                 if( xpos >= tempDirPost) {
                                       jumpInProgress = true;
                                        globalBlockScanner();
                                      console.info('trying to jump right');
@@ -254,7 +264,7 @@
                                                 
                                                  
                                      });
-                                 } else if( xpos < tempDirPost) {
+                                 } else if( xpos <= tempDirPost) {
                                       jumpInProgress = true;
                                        globalBlockScanner();
                                      console.info('trying to jump left');
@@ -281,7 +291,7 @@
                                  console.info('trying to jump in place');
                                  $('#mario').addClass('jumpRight');
                                 
-                                 $('#mario').stop().animate({
+                                 $('#mario').animate({
                                          'top': ypos -= 100
                                  }, 100, function () {
                                     
@@ -296,7 +306,7 @@
                                   jumpInProgress = true;
                                    globalBlockScanner();
                                 $('#mario').addClass('jumpLeft');
-                                 $('#mario').stop().animate({
+                                 $('#mario').animate({
                                          'top': ypos -= 100
                                  }, 100, function () {
                                          $('#mario').stop().animate({
