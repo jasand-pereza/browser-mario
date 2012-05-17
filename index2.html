@@ -164,10 +164,10 @@
           var inc = 0;
           var lastInc = 0;
           var timeDirPos = new Array();
-          var incMe=0;
+          var incMe=  0;
           var directionPosition ='right';
-          var doneMoving=true;
-          
+          var doneMoving = true;
+          var screenLoop = true;
           
           
            /* detect direction */
@@ -177,12 +177,23 @@
               return timeDirPos[incMe-1];
           }
     
-      
+          /* if set, mario will warp to the other side of the screen when traveling */
+          function screenLooper() {
+               if(screenLoop) {
+                    if($('#mario').offset().left < -(10)) {
+                         $('#mario').css('left', $('html').width() -10)
+                    }
+                    else if($('#mario').offset().left > $('html').width() + 10) {
+                         $('#mario').css('left', -20);
+                    }
+                    
+               }
+          }
      
      
       
      $('body').keydown(function (event) {
-         
+         screenLooper();
              event.preventDefault();
              xpos = $('#mario').offset().left;
             // console.info('marios x pos = '+xpos+' Marios last x pos = '+lastDirTime());
@@ -191,6 +202,7 @@
              if(event.which == 39) {
                     doneMoving = false;
                     jumpInProgress = false;
+                   
                     directionPosition ='right';
                     $('#mario').removeClass('jumpRight');
                     $('#mario').addClass('runningRight');
@@ -205,15 +217,17 @@
                      
              } else if(event.which == 37) {
                      doneMoving = false;
+                     
                      directionPosition ='left';  
                      $('#mario').removeClass('jumpRight');
                      $('#mario').addClass('runningLeft');
                      $('#mario').removeClass('runningRight');
                      $('#mario').stop().animate({
                              'left': (xpos -= 10 + (inc / 9))
-                     }, 300 - inc,function() { doneMoving = true});
+                     }, 300 - inc,function() { doneMoving = true; });
                      if(inc < 200) inc += 50;
                      lastInc = inc;
+                     
              }
              
              if(event.which == 32 && jumpInProgress == false) {
