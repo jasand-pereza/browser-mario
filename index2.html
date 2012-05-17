@@ -19,6 +19,7 @@
             position: absolute;
             left: 1px;
             top:300px;
+            z-index: 200;
         }
         .standingLeft {
              background-image: url('bigmario-left.png') !important;
@@ -38,51 +39,45 @@
         .crouching {
            background-image: url('mario-crouching.png') !important; 
         }
-        .bricks {
-            width: 78px;
-            height: 78px;
+        .blockElement {
+          
             display: block;
-            position: relative;
+            position: absolute;
             z-index: 200;
             background-image:url('brickbrown.png');
             background-repeat: repeat;
-            top:130px;
+          
         }
         
     </style>
 </head>
 <body>
-    <div class="bricks"></div>
+   
  <div id="mario"></div>
    
     
     <script type="text/javascript">
-       
+          
        var globalBlockCount = 0;
-       
-       
+       var blockOfBlocks = [];
+       var jumpInProgress = false;
        
        /* creates a block element*/
        /* Arguments: width, height, left, top, breakable */
        function BlockElement(w, h, l, t, b) {
           
           var tempBlock= document.createElement('div');
-          this.breakable = 'noBreak';
           this.bWidth = w;
           this.bHeight = h;
           this.bLeft = l;
           this.bTop = t;
-          this.bBreakable = b;
+          b ? this.bBreakable = 'breakable' : this.bBreakable = 'noBreak';
           this.thisId = 'bE_' + globalBlockCount;
           
-          if(b) breakable = 'breakable';
+          
           tempBlock.setAttribute('id','bE_' + globalBlockCount);
-          tempBlock.setAttribute('class','blockElement '+ breakable);
-          tempBlock.setAttribute('width', w);
-          tempBlock.setAttribute('height',h);
-          tempBlock.setAttribute('top', t);
-          tempBlock.setAttribute('left', l);
-          tempBlock.setAttribute('position', 'absolute');
+          tempBlock.setAttribute('class','blockElement '+ this.bBreakable);
+          tempBlock.setAttribute('style', 'top:' + this.bTop + 'px; left:' + this.bLeft + 'px; width:'+ this.bWidth + 'px; height:' + this.bHeight + 'px;');
           
           
           /* adds the block to the DOM */
@@ -93,20 +88,24 @@
           
           
           /* checks if there is a collision */
-          this.hitsMe = function(a, b) {
+          this.hitsMe = function(m, block) {
                var hit = false;
-               if((a.offset().top >= b.offset().top + b.height()) &&
-               (a.offset().left <= b.offset().left) ||
-               a.offset().left <= (b.offset().left + b.width())) {
-                    hit =true;
-                    console.log('yes');
-                    if(this.breakable) {
-                         this.breaksMe();
+               this.a = m;
+               this.b = block;
+               
+               if((this.a.offset().top >= this.b.offset().top + this.b.height()) &&
+                  ((this.a.offset().left + this.a.width()) >= this.b.offset().left) &&
+                  (this.a.offset().left <= (this.b.offset().left + this.b.width()))) {
+
+                   if(this.bBreakable !="noBreak") {
+                         this.breaksMe(block);
                     }
                     else {
-                         this.bumpsMe();
+                         this.bumpsMe(block);
                     }
+                    hit = true;
                }
+               return hit;
           }
           
           
@@ -118,213 +117,227 @@
           
           
           /* kills the block */
-          this.breaksMe = function() {
-               $('#'+thisId).remove();
+          this.breaksMe = function(block) {
+               block.remove();
                $('embed').remove();
                $('body').append('<embed src="brickbreak.wav" autostart="true" hidden="true" loop="false">');
+               globalBlockCount--;
           }
      }
      
+     
+
+     
+    
+     
+     /* scans interactions with objects in the global space */
      function globalBlockScanner() {
-          
+     var  testHit2 = setInterval(function() {
+               
+               if(globalBlockCount > 0) {
+                    for(i=0; i < globalBlockCount; i++) {
+                         console.log(i);
+                         if(blockOfBlocks[i].hitsMe($('#mario'),$('.blockElement:eq(' + i + ')'))) {
+                              clearInterval(testHit2);
+                         }
+                         else
+                         {
+                              clearInterval(testHit2);
+                         }
+                    }
+               }
+          },
+          10);
      }
      
      
-       $(function () {
-          var blocktest = new BlockElement(78,78,300,130,true);
-          blocktest.createBlock();
-          blocktest.hitsMe();
+     $(function () {
+        
+          blockOfBlocks[0] = new BlockElement(78,78,300,130,false);
+          blockOfBlocks[0].createBlock();
+         
+          blockOfBlocks[1] = new BlockElement(78,78,600,130,true);
+          blockOfBlocks[1].createBlock();
+        
+          var xposLeft;
+          var currentPlane = 300;
+          var inc = 0;
+          var lastInc = 0;
+          var timeDirPos = new Array();
+          var incMe=0;
+          var directionPosition ='right';
+          var doneMoving=true;
           
-        var xposLeft;
-        var currentPlane = 300;
-        var inc = 0;
-        var lastInc = 0;
-        var timeDirPos = new Array();
-        var incMe=0;
-        var directionPosition ='right';
-        var doneMoving=true;
-        var jumpInProgress = false;
-         /* detect direction */
-        function lastDirTime() {
-            incMe++;
-            timeDirPos[incMe]=$('#mario').offset().left;
-            return timeDirPos[incMe-1];
-        }
+          
+          
+           /* detect direction */
+          function lastDirTime() {
+              incMe++;
+              timeDirPos[incMe]=$('#mario').offset().left;
+              return timeDirPos[incMe-1];
+          }
+    
       
-        
-       
-       
-        
-        $('body').keydown(function (event) {
-            console.info(jumpInProgress);
-                event.preventDefault();
-                xpos = $('#mario').offset().left;
-               // console.info('marios x pos = '+xpos+' Marios last x pos = '+lastDirTime());
-                ypos = $('#mario').offset().top;
-                tempDirPost = lastDirTime();
-                if(event.which == 39) {
-                        doneMoving = false;
-                         jumpInProgress = false;
-                        directionPosition ='right';
-                        $('#mario').removeClass('jumpRight');
-                        $('#mario').addClass('runningRight');
-                        $('#mario').removeClass('runningLeft');
-                        $('#mario').stop().animate({
-                                'left': (xpos += 10 + (inc / 9))
-                        }, 300 - inc, function() { doneMoving = true});
-                        if(inc < 200) inc += 50;
-                        lastInc = inc;
-                } else if(event.which == 37) {
-                        doneMoving = false;
-                        directionPosition ='left';  
-                        $('#mario').removeClass('jumpRight');
-                        $('#mario').addClass('runningLeft');
-                        $('#mario').removeClass('runningRight');
-                        $('#mario').stop().animate({
-                                'left': (xpos -= 10 + (inc / 9))
-                        }, 300 - inc,function() { doneMoving = true});
-                        if(inc < 200) inc += 50;
-                        lastInc = inc;
-                }
-                if(event.which == 32 && jumpInProgress == false) {
-                            $('embed').remove();
-                            $('body').append('<embed src="smb_jump-super.wav" autostart="true" hidden="true" loop="false">');
-                            if(lastInc > 150) /* if the speed is great enough to run and jump */ {
-                                //console.info('150 yes');
-                                    if( xpos > tempDirPost) {
-                                         jumpInProgress = true;
-                                        console.info('trying to jump right');
-                                        $('#mario').addClass('jumpRight');
-                                        $('#mario').stop().animate({
-                                                'left' : xpos +=100,
-                                                'top': ypos -= 100
-                                        }, 200, function () {
-                                                $('#mario').stop().animate({
-                                                        'top': currentPlane,
-                                                        'left' : xpos +=80
-                                                }, 200,function() {
-                                                    $('#mario').removeClass('jumpRight');
-                                                    jumpInProgress = false;
-                                                });
-                                                   
-                                                    
-                                        });
-                                    } else if( xpos < tempDirPost) {
-                                         jumpInProgress = true;
-                                        console.info('trying to jump left');
-                                         $('#mario').addClass('jumpLeft');
+     
+     
+      
+     $('body').keydown(function (event) {
+         
+             event.preventDefault();
+             xpos = $('#mario').offset().left;
+            // console.info('marios x pos = '+xpos+' Marios last x pos = '+lastDirTime());
+             ypos = $('#mario').offset().top;
+             tempDirPost = lastDirTime();
+             if(event.which == 39) {
+                    doneMoving = false;
+                    jumpInProgress = false;
+                    directionPosition ='right';
+                    $('#mario').removeClass('jumpRight');
+                    $('#mario').addClass('runningRight');
+                    $('#mario').removeClass('runningLeft');
+                    $('#mario').stop().animate({
+                            'left': (xpos += 10 + (inc / 9))
+                    }, 300 - inc, function() {
+                        doneMoving = true});
+                     
+                     if(inc < 200) inc += 50;
+                     lastInc = inc;
+                     
+             } else if(event.which == 37) {
+                     doneMoving = false;
+                     directionPosition ='left';  
+                     $('#mario').removeClass('jumpRight');
+                     $('#mario').addClass('runningLeft');
+                     $('#mario').removeClass('runningRight');
+                     $('#mario').stop().animate({
+                             'left': (xpos -= 10 + (inc / 9))
+                     }, 300 - inc,function() { doneMoving = true});
+                     if(inc < 200) inc += 50;
+                     lastInc = inc;
+             }
+             
+             if(event.which == 32 && jumpInProgress == false) {
+                         $('embed').remove();
+                         $('body').append('<embed src="smb_jump-super.wav" autostart="true" hidden="true" loop="false">');
+                         if(lastInc > 150) /* if the speed is great enough to run and jump */ {
+                             //console.info('150 yes');
+                                 if( xpos > tempDirPost) {
+                                      jumpInProgress = true;
+                                       globalBlockScanner();
+                                     console.info('trying to jump right');
+                                     $('#mario').addClass('jumpRight');
+                                     $('#mario').stop().animate({
+                                             'left' : xpos +=100,
+                                             'top': ypos -= 100
+                                     }, 200, function () {
+                                             $('#mario').stop().animate({
+                                                     'top': currentPlane,
+                                                     'left' : xpos +=80
+                                             }, 200,function() {
+                                                 $('#mario').removeClass('jumpRight');
+                                                 jumpInProgress = false;
+                                             });
+                                                
+                                                 
+                                     });
+                                 } else if( xpos < tempDirPost) {
+                                      jumpInProgress = true;
+                                       globalBlockScanner();
+                                     console.info('trying to jump left');
+                                      $('#mario').addClass('jumpLeft');
+                                      $('#mario').stop().animate({
+                                             'left': xpos -= 200,
+                                             'top': ypos -= 100
+                                     }, 400, function () {
+                                             $('#mario').stop().animate({
+                                                     'top': currentPlane,
+                                                     'left': xpos -= 120
+                                             }, 200, function () {
+                                                     $('#mario').removeClass('jumpLeft');
+                                                     jumpInProgress = false;
+                                             });
+                                             lastInc = 0;
+                                             
+                                             
+                                     });
+                                 }
+                         } else if( directionPosition =='right' && doneMoving == true && jumpInProgress == false) /* jump facing right without running */ {
+                                  jumpInProgress = true;
+                                    globalBlockScanner();
+                                 console.info('trying to jump in place');
+                                 $('#mario').addClass('jumpRight');
+                                
+                                 $('#mario').stop().animate({
+                                         'top': ypos -= 100
+                                 }, 100, function () {
+                                    
                                          $('#mario').stop().animate({
-                                                'left': xpos -= 200,
-                                                'top': ypos -= 100
-                                        }, 400, function () {
-                                                $('#mario').stop().animate({
-                                                        'top': currentPlane,
-                                                        'left': xpos -= 120
-                                                }, 200, function () {
-                                                        $('#mario').removeClass('jumpLeft');
-                                                        jumpInProgress = false;
-                                                });
-                                                lastInc = 0;
-                                                
-                                                
-                                        });
-                                    }
-                            } else if( directionPosition =='right' && doneMoving == true && jumpInProgress == false) /* jump facing right without running */ {
-                                     jumpInProgress = true;
-                                       var testHit2 = setInterval(function() {
-                                        if($('.bricks').length > 0) {
-                                            if(hitTest($('#mario'),$('.bricks'))) {
-                                            clearInterval(testHit2);
-                                            
-                                            }
-                                            else {
-                                                clearInterval(testHit2);
-                                            }
-                                        }
-                                    },10);
-                                    console.info('trying to jump in place');
-                                    $('#mario').addClass('jumpRight');
-                                    $('#mario').stop().animate({
-                                            'top': ypos -= 100
-                                    }, 100, function () {
-                                            $('#mario').stop().animate({
-                                                    'top': currentPlane
-                                            }, 300, function () {
-                                                    $('#mario').removeClass('jumpRight')
-                                                    jumpInProgress = false;
-                                            });
-                                    });
-                            } else if( directionPosition =='left' && doneMoving == true && jumpInProgress == false) /* jump facing left without running */ { 
-                                     jumpInProgress = true;
-                                     var testHit = setInterval(function() {
-                                        if($('.bricks').length > 0) {
-                                            if(hitTest($('#mario'),$('.bricks'))) {
-                                            clearInterval(testHit);
-                                           
-                                            $('.bricks').remove();
-                                            }
-                                            else {
-                                                clearInterval(testHit);
-                                            }
-                                        }
-                                    },10);
-                                    $('#mario').addClass('jumpLeft');
-                                    $('#mario').stop().animate({
-                                            'top': ypos -= 100
-                                    }, 100, function () {
-                                            $('#mario').stop().animate({
-                                                    'top': currentPlane
-                                            }, 300, function () {
-                                                    $('#mario').removeClass('jumpLeft')
-                                                    jumpInProgress = false;
-                                            });
-                                    });
-                            }
-                            
-                        
-                }
-                if(event.which == 40) {
-                        $('#mario').addClass('crouching');
-                }
-                
-        });
-        $('body').keyup(function (event) {
-                event.preventDefault();
-                
-                xpos = $('#mario').offset().left;
-                if(event.which == 39) {
-                        inc = 0;
-                        $('#mario').removeClass('runningRight');
-                        $('#mario').removeClass('runningLeft');
-                        $('#mario').removeClass('standingLeft');
-                        if(lastInc > 150) {
-                                $('#mario').animate({
-                                        'left': xpos += 90
-                                }, 400, function () {
-                                        lastInc = 0;
-                                       
-                                });
-                        }
-                } else if(event.which == 37) {
-                        inc = 0;
-                        
-                        $('#mario').removeClass('runningLeft');
-                        $('#mario').removeClass('runningRight');
-                        $('#mario').addClass('standingLeft');
-                        if(lastInc > 150) {
-                                $('#mario').animate({
-                                        'left': xpos -= 90
-                                }, 400, function () {
-                                        lastInc = 0;
-                                       
-                                });
-                        }
-                }
+                                                 'top': currentPlane
+                                         }, 300, function () {
+                                                 $('#mario').removeClass('jumpRight')
+                                                 jumpInProgress = false;
+                                         });
+                                 });
+                         } else if( directionPosition =='left' && doneMoving == true && jumpInProgress == false) /* jump facing left without running */ { 
+                                  jumpInProgress = true;
+                                   globalBlockScanner();
+                                $('#mario').addClass('jumpLeft');
+                                 $('#mario').stop().animate({
+                                         'top': ypos -= 100
+                                 }, 100, function () {
+                                         $('#mario').stop().animate({
+                                                 'top': currentPlane
+                                         }, 300, function () {
+                                                 $('#mario').removeClass('jumpLeft')
+                                                 jumpInProgress = false;
+                                         });
+                                 });
+                         }
+                         
+                     
+             }
+             if(event.which == 40) {
+                     $('#mario').addClass('crouching');
+             }
+             
+     });
+      $('body').keyup(function (event) {
+              event.preventDefault();
               
-                if(event.which == 40) {
-                        $('#mario').removeClass('crouching');
-                }
-        });
+              xpos = $('#mario').offset().left;
+              if(event.which == 39) {
+                      inc = 0;
+                      $('#mario').removeClass('runningRight');
+                      $('#mario').removeClass('runningLeft');
+                      $('#mario').removeClass('standingLeft');
+                      if(lastInc > 150) {
+                              $('#mario').animate({
+                                      'left': xpos += 90
+                              }, 400, function () {
+                                      lastInc = 0;
+                                     
+                              });
+                      }
+              } else if(event.which == 37) {
+                      inc = 0;
+                      
+                      $('#mario').removeClass('runningLeft');
+                      $('#mario').removeClass('runningRight');
+                      $('#mario').addClass('standingLeft');
+                      if(lastInc > 150) {
+                              $('#mario').animate({
+                                      'left': xpos -= 90
+                              }, 400, function () {
+                                      lastInc = 0;
+                                     
+                              });
+                      }
+              }
+            
+              if(event.which == 40) {
+                      $('#mario').removeClass('crouching');
+              }
+      });
 });
        
     </script>
