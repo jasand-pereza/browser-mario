@@ -48,14 +48,44 @@
             background-repeat: repeat;
           
         }
+       .vert_pipe {
+          width: 100px;
+          height: 44px;
+          background-image: url('Green-Pipe.gif') !important;
+          background-repeat: repeat-y;
+          background-position: center;
+          position: absolute;
+          top: 306px;
+          }
+          
+          .pipe_top {
+               width: 100px;
+               height: 47px;
+               position: absolute;
+               top : 259px;
+               z-index: 10;
+               background-image: url('pipetop.gif');
+               background-position: top center;
+               background-repeat: no-repeat;
+          }
+          #ground {
+          top: 350px;
+          border-top: solid thin 
+          black;
+          width: 100%;
+          z-index: -1;
+          position: absolute;
+          }
+          
         
     </style>
 </head>
 <body>
    
  <div id="mario"></div>
-   
-    
+ <div class="pipe_top"></div>
+   <div class="vert_pipe"></div>
+    <div id = "ground"></div>
     <script type="text/javascript">
           
        var globalBlockCount = 0;
