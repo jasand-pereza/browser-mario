@@ -1,0 +1,84 @@
+  #mario {
+            width:50px;
+            height:50px;
+            display: block;
+            background-image: url('bigmario.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            position: absolute;
+            left: 1px;
+            top:300px;
+            z-index: 200;
+        }
+        .standingLeft {
+             background-image: url('bigmario-left.png') !important;
+        }
+        .runningRight {
+            background-image: url('run-right.gif') !important;
+        }
+        .runningLeft {
+            background-image: url('run-left.gif') !important;
+        }
+        .jumpRight {
+           background-image: url('jump-right.png') !important; 
+        }
+        .jumpLeft {
+           background-image: url('jump-left.png') !important; 
+        }
+        .crouching {
+           background-image: url('mario-crouching.png') !important; 
+        }
+        .blockElement {
+          
+            display: block;
+            position: absolute;
+            z-index: 200;
+            background-image:url('brickbrown.png');
+            background-repeat: repeat;
+          
+        }
+        .mini_brick {
+            width:20px;
+            height:10px;
+            display: none;
+            position: absolute;
+            z-index: 200;
+            background-image:url('brickbrown.png');
+            background-repeat: repeat;
+        }
+       .vert_pipe {
+          width: 100px;
+          height: 44px;
+          background-image: url('Green-Pipe.gif') !important;
+          background-repeat: repeat-y;
+          background-position: center;
+          position: absolute;
+          top: 40px;
+          }
+          
+          .pipe_top {
+               width: 100px;
+               height: 47px;
+               position: absolute;
+               top : 0;
+               z-index: 10;
+               background-image: url('pipetop.gif');
+               background-position: top center;
+               background-repeat: no-repeat;
+          }
+          .vert_pipe_whole {
+               width:100px;
+               height:auto;
+               display: block;
+               position: absolute;
+               top: 266px;
+          }
+          #ground {
+          top: 350px;
+          border-top: solid thin 
+          black;
+          width: 100%;
+          z-index: -1;
+          position: absolute;
+          }
+          
