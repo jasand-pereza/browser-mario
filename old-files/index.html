@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd"
+    >
+<html lang="en">
+<head>
+     <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+     <script type="text/javascript" src="jquery-ui-1.8.20.custom.min.js"></script>
+     
+    <title>Play Mario in  website</title>
+    <style>
+       
+        #mario {
+            width:50px;
+            height:50px;
+            display: block;
+            background-image: url('bigmario.png');
+            background-repeat: no-repeat;
+            background-position: top left;
+            position: absolute;
+            left: 1px;
+            top:300px;
+        }
+        .standingLeft {
+             background-image: url('bigmario-left.png') !important;
+        }
+        .runningRight {
+            background-image: url('run-right.gif') !important;
+        }
+        .runningLeft {
+            background-image: url('run-left.gif') !important;
+        }
+        .jumpRight {
+           background-image: url('jump-right.png') !important; 
+        }
+        .jumpLeft {
+           background-image: url('jump-left.png') !important; 
+        }
+        .crouching {
+           background-image: url('mario-crouching.png') !important; 
+        }
+        .bricks {
+            width: 78px;
+            height: 78px;
+            display: block;
+            position: relative;
+            z-index: 200;
+            background-image:url('brickbrown.png');
+            background-repeat: repeat;
+            top:130px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="bricks"></div>
+ <div id="mario"></div>
+   
+    
+    <script type="text/javascript">
+        
+       $(function () {
+        var xposLeft;
+        var currentPlane = 300;
+        var inc = 0;
+        var lastInc = 0;
+        var timeDirPos = new Array();
+        var incMe=0;
+        var directionPosition ='right';
+        var doneMoving=true;
+        var jumpInProgress = false;
+         /* detect direction */
+        function lastDirTime() {
+            incMe++;
+            timeDirPos[incMe]=$('#mario').offset().left;
+            return timeDirPos[incMe-1];
+        }
+        
+        function hitTest(a, b) {
+            var hit = false;
+            if((a.offset().top >= b.offset().top + b.height()) && (a.offset().left <= b.offset().left) || a.offset().left <= (b.offset().left + b.width())) {
+                hit =true;
+                console.log('yes');
+            }
+            else {
+                hit =false;
+            }
+            return hit;
+        }
+       
+        
+        $('body').keydown(function (event) {
+            console.info(jumpInProgress);
+                event.preventDefault();
+                xpos = $('#mario').offset().left;
+               // console.info('marios x pos = '+xpos+' Marios last x pos = '+lastDirTime());
+                ypos = $('#mario').offset().top;
+                tempDirPost = lastDirTime();
+                if(event.which == 39) {
+                        doneMoving = false;
+                         jumpInProgress = false;
+                        directionPosition ='right';
+                        $('#mario').removeClass('jumpRight');
+                        $('#mario').addClass('runningRight');
+                        $('#mario').removeClass('runningLeft');
+                        $('#mario').stop().animate({
+                                'left': (xpos += 10 + (inc / 9))
+                        }, 300 - inc, function() { doneMoving = true});
+                        if(inc < 200) inc += 50;
+                        lastInc = inc;
+                } else if(event.which == 37) {
+                        doneMoving = false;
+                        directionPosition ='left';  
+                        $('#mario').removeClass('jumpRight');
+                        $('#mario').addClass('runningLeft');
+                        $('#mario').removeClass('runningRight');
+                        $('#mario').stop().animate({
+                                'left': (xpos -= 10 + (inc / 9))
+                        }, 300 - inc,function() { doneMoving = true});
+                        if(inc < 200) inc += 50;
+                        lastInc = inc;
+                }
+                if(event.which == 32 && jumpInProgress == false) {
+                            $('embed').remove();
+                            $('body').append('<embed src="smb_jump-super.wav" autostart="true" hidden="true" loop="false">');
+                            if(lastInc > 150) /* if the speed is great enough to run and jump */ {
+                                //console.info('150 yes');
+                                    if( xpos > tempDirPost) {
+                                         jumpInProgress = true;
+                                        console.info('trying to jump right');
+                                        $('#mario').addClass('jumpRight');
+                                        $('#mario').stop().animate({
+                                                'left' : xpos +=100,
+                                                'top': ypos -= 100
+                                        }, 200, function () {
+                                                $('#mario').stop().animate({
+                                                        'top': currentPlane,
+                                                        'left' : xpos +=80
+                                                }, 200,function() {
+                                                    $('#mario').removeClass('jumpRight');
+                                                    jumpInProgress = false;
+                                                });
+                                                   
+                                                    
+                                        });
+                                    } else if( xpos < tempDirPost) {
+                                         jumpInProgress = true;
+                                        console.info('trying to jump left');
+                                         $('#mario').addClass('jumpLeft');
+                                         $('#mario').stop().animate({
+                                                'left': xpos -= 200,
+                                                'top': ypos -= 100
+                                        }, 400, function () {
+                                                $('#mario').stop().animate({
+                                                        'top': currentPlane,
+                                                        'left': xpos -= 120
+                                                }, 200, function () {
+                                                        $('#mario').removeClass('jumpLeft');
+                                                        jumpInProgress = false;
+                                                });
+                                                lastInc = 0;
+                                                
+                                                
+                                        });
+                                    }
+                            } else if( directionPosition =='right' && doneMoving == true && jumpInProgress == false) /* jump facing right without running */ {
+                                     jumpInProgress = true;
+                                       var testHit2 = setInterval(function() {
+                                        if($('.bricks').length > 0) {
+                                            if(hitTest($('#mario'),$('.bricks'))) {
+                                            clearInterval(testHit2);
+                                            $('embed').remove();
+                                             $('body').append('<embed src="bump.wav" autostart="true" hidden="true" loop="false">');
+                                            }
+                                            else {
+                                                clearInterval(testHit2);
+                                            }
+                                        }
+                                    },10);
+                                    console.info('trying to jump in place');
+                                    $('#mario').addClass('jumpRight');
+                                    $('#mario').stop().animate({
+                                            'top': ypos -= 100
+                                    }, 100, function () {
+                                            $('#mario').stop().animate({
+                                                    'top': currentPlane
+                                            }, 300, function () {
+                                                    $('#mario').removeClass('jumpRight')
+                                                    jumpInProgress = false;
+                                            });
+                                    });
+                            } else if( directionPosition =='left' && doneMoving == true && jumpInProgress == false) /* jump facing left without running */ { 
+                                     jumpInProgress = true;
+                                     var testHit = setInterval(function() {
+                                        if($('.bricks').length > 0) {
+                                            if(hitTest($('#mario'),$('.bricks'))) {
+                                            clearInterval(testHit);
+                                            $('embed').remove();
+                                             $('body').append('<embed src="brickbreak.wav" autostart="true" hidden="true" loop="false">');
+                                            $('.bricks').remove();
+                                            }
+                                            else {
+                                                clearInterval(testHit);
+                                            }
+                                        }
+                                    },10);
+                                    $('#mario').addClass('jumpLeft');
+                                    $('#mario').stop().animate({
+                                            'top': ypos -= 100
+                                    }, 100, function () {
+                                            $('#mario').stop().animate({
+                                                    'top': currentPlane
+                                            }, 300, function () {
+                                                    $('#mario').removeClass('jumpLeft')
+                                                    jumpInProgress = false;
+                                            });
+                                    });
+                            }
+                            
+                        
+                }
+                if(event.which == 40) {
+                        $('#mario').addClass('crouching');
+                }
+                
+        });
+        $('body').keyup(function (event) {
+                event.preventDefault();
+                
+                xpos = $('#mario').offset().left;
+                if(event.which == 39) {
+                        inc = 0;
+                        $('#mario').removeClass('runningRight');
+                        $('#mario').removeClass('runningLeft');
+                        $('#mario').removeClass('standingLeft');
+                        if(lastInc > 150) {
+                                $('#mario').animate({
+                                        'left': xpos += 90
+                                }, 400, function () {
+                                        lastInc = 0;
+                                       
+                                });
+                        }
+                } else if(event.which == 37) {
+                        inc = 0;
+                        
+                        $('#mario').removeClass('runningLeft');
+                        $('#mario').removeClass('runningRight');
+                        $('#mario').addClass('standingLeft');
+                        if(lastInc > 150) {
+                                $('#mario').animate({
+                                        'left': xpos -= 90
+                                }, 400, function () {
+                                        lastInc = 0;
+                                       
+                                });
+                        }
+                }
+              
+                if(event.which == 40) {
+                        $('#mario').removeClass('crouching');
+                }
+        });
+});
+       
+    </script>
+</body>
+</html>
