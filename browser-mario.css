@@ -55,7 +55,9 @@
           position: absolute;
           top: 40px;
           }
-          
+        .vert_pipe_whole {
+          background-color: transparent;
+        }
           .pipe_top {
                width: 100px;
                height: 47px;

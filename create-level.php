@@ -44,7 +44,7 @@
     }
     </style>
   <!--  ====================== styles ========================= -->
-  <link rel="stylesheet" href="themes/base/jquery.ui.all.css">
+  <link rel="stylesheet" href="scripts/ui/jquery.ui.all.css">
 <link rel="stylesheet" type="text/css" href="styles/browser-mario.css">
     <script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
  	<script src="scripts/ui/jquery.ui.core.js"></script>

@@ -8,7 +8,7 @@ background-position:top left;
 position:absolute;
 left:1px;
 top:300px;
-z-index:200;
+z-index:201;
 }
 
 .standingLeft {
@@ -42,7 +42,13 @@ z-index:200;
 background-image:url(../graphics/brickbrown.png);
 background-repeat:repeat;
 }
-
+.nobreak-block {
+display:block;
+position:absolute;
+z-index:200;
+background-image:url(../graphics/nobreak-block.gif);
+background-repeat:repeat;
+}
 .mini_brick {
 width:20px;
 height:10px;
@@ -79,7 +85,61 @@ width:100px;
 height:auto;
 display:block;
 position:absolute;
-top:266px;
+z-index: 200;
+background-image: none !important;
+}
+
+/* level elements */
+
+#level-responsive {
+  background-color: #000;
+  background-image: url(../graphics/ground-outside.jpg);
+  background-position: 22px 350px;
+  background-repeat: repeat-x;
+  overflow: hidden;
+}
+
+#warp-title {
+background-image: url(../graphics/wzone-title.jpg);
+position: absolute;
+top: 49px;
+left: 198px;
+z-index: 100;
+width: 485px;
+height: 49px;
+}
+
+.label-skeleton {
+background-image: url(../graphics/res-labels.jpg);
+background-position: 5px 3px;
+position: absolute;
+top: 182px;
+left: 169px;
+z-index: 100;
+width: 200px;
+height: 49px;
+}
+
+.label-foundation {
+background-image: url(../graphics/res-labels.jpg);
+background-position: -15px -38px;
+position: absolute;
+top: 182px;
+left: 369px;
+z-index: 100;
+width: 200px;
+height: 49px;
+}
+
+.label-bootstrap {
+background-image: url(../graphics/res-labels.jpg);
+background-position: -15px -84px;
+position: absolute;
+top: 182px;
+left: 569px;
+z-index: 100;
+width: 200px;
+height: 49px;
 }
 
 #ground {
