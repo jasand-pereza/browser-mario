@@ -291,10 +291,10 @@
      /* scans interactions with objects in the global space */
      function globalBlockScanner() {
          var testHit2 = setInterval(function () {
-          console.info(lastInc);
+          //console.info(lastInc);
              if (globalBlockCount > 0) {
                  for (i = 0; i < globalBlockCount; i++) {
-                  blockOfBlocks[i].outsideTouch(MARIO,$('.' + blockOfBlocks[i].generalType + ':eq(' + i + ')'));
+                 // blockOfBlocks[i].outsideTouch(MARIO,$('.' + blockOfBlocks[i].generalType + ':eq(' + i + ')'));
                      if (blockOfBlocks[i].hitsMe(MARIO, $('.' + blockOfBlocks[i].generalType + ':eq(' + i + ')'))) {
                          clearInterval(testHit2);
                      } else if ((blockOfBlocks[i].enterVSpace(MARIO, $('.ground:eq(' + i + ')'))) && (blockOfBlocks[i].onTop(MARIO, $('.ground:eq(' + i + ')')))) {
@@ -445,7 +445,6 @@
      }
      
      $('body').keydown(function (event) {
-      globalBlockScanner();
          if (acInc == 0) alwaysCheckfunction();
          event.preventDefault();
          screenLooper();
