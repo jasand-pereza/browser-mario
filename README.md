@@ -23,5 +23,5 @@ From anywhere on your computer, open the index.html file in your browser. Follow
 For other options such as the level creator, put this folder on a web server that can run PHP.
   Using the Level Creator: type in the path of [path to files]/browser-mario/create-level.php
   
-<storng>FUTURE DEVELOPMENT</strong><br>
+<strong>FUTURE DEVELOPMENT</strong><br>
  Since this was experiment, it may or may not continue to be developed. Feel free to use the code or even the concept to develop this further.
