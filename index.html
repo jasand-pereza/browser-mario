@@ -1,37 +1,42 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
-     
+<!DOCTYPE html>
+<html>
 <head>
-
-<!--
-====================== scripts ========================= -->
-<script type="text/javascript">
-  var demoMode=true;
-  var levelJump = false;
-</script>
-<script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="scripts/browser-mario.js"></script>
-
-<!--
-====================== styles ========================= -->
-<link rel="stylesheet" type="text/css" href="styles/browser-mario.css">
-     
-<title>Play Browser Mario</title>
+  <title>Browser Mario</title>
+  <script type="text/javascript">
+    var demoMode=true;
+    var levelJump = false;
+  </script>
+  <script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="scripts/browser-mario.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles/browser-mario.css">
 </head>
 
+<audio id="sfx-jump">
+  <source src="sfx/jump.wav" type="audio/wav">
+</audio>
+<audio id="sfx-bump">
+  <source src="sfx/bump.wav" type="audio/wav">
+</audio>
+<audio id="sfx-brick-break">
+  <source src="sfx/brick-break.wav" type="audio/wav">
+</audio>
+<audio id="sfx-pipe">
+  <source src="sfx/pipe.wav" type="audio/wav">
+</audio>
 <body>
-<div id="mario">
-</div>
-<div class="mini_brick">
-</div>
-<div class="mini_brick">
-</div>
-<div class="mini_brick">
-</div>
-<div class="mini_brick">
-</div>
-<div id="ground">
-</div>
+<legend id="controls">
+  <ul>
+    <li>Walk/Run left and right: &harr; </li>
+    <li>Crouch: &darr;  </li>
+    <li>Jump: spacebar </li>
+  </ul>
+</legend>
+<div id="mario"></div>
+<div class="mini_brick"></div>
+<div class="mini_brick"></div>
+<div class="mini_brick"></div>
+<div class="mini_brick"></div>
+<div id="ground"></div>
+
 </body>
 </html>

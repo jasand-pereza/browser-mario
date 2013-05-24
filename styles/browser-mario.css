@@ -1,92 +1,97 @@
 #mario {
-width:50px;
-height:50px;
-display:block;
-background-image:url(../graphics/bigmario.png);
-background-repeat:no-repeat;
-background-position:top left;
-position:absolute;
-left:1px;
-top:300px;
-z-index:201;
+  width: 50px;
+  height: 50px;
+  display: block;
+  background-image: url(../graphics/bigmario.png);
+  background-repeat: no-repeat;
+  background-position: top left;
+  position: absolute;
+  left: 1px;
+  top: 300px;
+  z-index: 201;
+}
+
+legend#controls {
+  color: #969696;
+  font-family: arial;
 }
 
 .standingLeft {
-background-image:url(../graphics/bigmario-left.png)!important;
+  background-image: url(../graphics/bigmario-left.png)!important;
 }
 
 .runningRight {
-background-image:url(../graphics/run-right.gif)!important;
+  background-image: url(../graphics/run-right.gif)!important;
 }
 
 .runningLeft {
-background-image:url(../graphics/run-left.gif)!important;
+  background-image: url(../graphics/run-left.gif)!important;
 }
 
 .jumpRight {
-background-image:url(../graphics/jump-right.png)!important;
+  background-image: url(../graphics/jump-right.png)!important;
 }
 
 .jumpLeft {
-background-image:url(../graphics/jump-left.png)!important;
+  background-image: url(../graphics/jump-left.png)!important;
 }
 
 .crouching {
-background-image:url(../graphics/mario-crouching.png)!important;
+  background-image: url(../graphics/mario-crouching.png)!important;
 }
 
 .blockElement {
-display:block;
-position:absolute;
-z-index:200;
-background-image:url(../graphics/brickbrown.png);
-background-repeat:repeat;
+  display: block;
+  position: absolute;
+  z-index: 200;
+  background-image: url(../graphics/brickbrown.png);
+  background-repeat: repeat;
 }
 .nobreak-block {
-display:block;
-position:absolute;
-z-index:200;
-background-image:url(../graphics/nobreak-block.gif);
-background-repeat:repeat;
+  display: block;
+  position: absolute;
+  z-index: 200;
+  background-image: url(../graphics/nobreak-block.gif);
+  background-repeat: repeat;
 }
 .mini_brick {
-width:20px;
-height:10px;
-display:none;
-position:absolute;
-z-index:200;
-background-image:url(../graphics/brickbrown.png);
-background-repeat:repeat;
+  width: 20px;
+  height: 10px;
+  display: none;
+  position: absolute;
+  z-index: 200;
+  background-image: url(../graphics/brickbrown.png);
+  background-repeat: repeat;
 }
 
 .vert_pipe {
-width:100px;
-height:44px;
-background-image:url(../graphics/Green-Pipe.gif)!important;
-background-repeat:repeat-y;
-background-position:center;
-position:absolute;
-top:40px;
+  width: 100px;
+  height: 44px;
+  background-image: url(../graphics/Green-Pipe.gif)!important;
+  background-repeat: repeat-y;
+  background-position: center;
+  position: absolute;
+  top: 40px;
 }
 
 .pipe_top {
-width:100px;
-height:47px;
-position:absolute;
-top:0;
-z-index:10;
-background-image:url(../graphics/pipetop.gif);
-background-position:top center;
-background-repeat:no-repeat;
+  width: 100px;
+  height: 47px;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  background-image: url(../graphics/pipetop.gif);
+  background-position: top center;
+  background-repeat: no-repeat;
 }
 
 .vert_pipe_whole {
-width:100px;
-height:auto;
-display:block;
-position:absolute;
-z-index: 200;
-background-image: none !important;
+  width: 100px;
+  height: auto;
+  display: block;
+  position: absolute;
+  z-index: 200;
+  background-image: none !important;
 }
 
 /* level elements */
@@ -100,52 +105,52 @@ background-image: none !important;
 }
 
 #warp-title {
-background-image: url(../graphics/wzone-title.jpg);
-position: absolute;
-top: 49px;
-left: 198px;
-z-index: 100;
-width: 485px;
-height: 49px;
+  background-image: url(../graphics/wzone-title.jpg);
+  position: absolute;
+  top: 49px;
+  left: 198px;
+  z-index: 100;
+  width: 485px;
+  height: 49px;
 }
 
 .label-skeleton {
-background-image: url(../graphics/res-labels.jpg);
-background-position: 5px 3px;
-position: absolute;
-top: 182px;
-left: 169px;
-z-index: 100;
-width: 200px;
-height: 49px;
+  background-image: url(../graphics/res-labels.jpg);
+  background-position: 5px 3px;
+  position: absolute;
+  top: 182px;
+  left: 169px;
+  z-index: 100;
+  width: 200px;
+  height: 49px;
 }
 
 .label-foundation {
-background-image: url(../graphics/res-labels.jpg);
-background-position: -15px -38px;
-position: absolute;
-top: 182px;
-left: 369px;
-z-index: 100;
-width: 200px;
-height: 49px;
+  background-image: url(../graphics/res-labels.jpg);
+  background-position: -15px -38px;
+  position: absolute;
+  top: 182px;
+  left: 369px;
+  z-index: 100;
+  width: 200px;
+  height: 49px;
 }
 
 .label-bootstrap {
-background-image: url(../graphics/res-labels.jpg);
-background-position: -15px -84px;
-position: absolute;
-top: 182px;
-left: 569px;
-z-index: 100;
-width: 200px;
-height: 49px;
+  background-image: url(../graphics/res-labels.jpg);
+  background-position: -15px -84px;
+  position: absolute;
+  top: 182px;
+  left: 569px;
+  z-index: 100;
+  width: 200px;
+  height: 49px;
 }
 
 #ground {
-top:350px;
-border-top:solid thin #000;
-width:100%;
-z-index:-1;
-position:absolute;
+  top: 350px;
+  border-top: solid thin #000;
+  width: 100%;
+  z-index: 1;
+  position: absolute;
 }
