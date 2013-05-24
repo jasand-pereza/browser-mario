@@ -1,7 +1,7 @@
 browser-mario
 =============
 
-PLAY MARIO IN YOUR BROWSER
+<strong>PLAY MARIO IN YOUR BROWSER</strong>
 You can control Mario by using the arrow keys and spacebar to jump or crouch. Crouching on a pipe will warp you to fall from above the screen. Jumping below certain brick blocks, will break them. 
 
 DEVELOPER GOAL
