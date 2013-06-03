@@ -1,3 +1,20 @@
+var demoMode=true;
+var levelJump = false;
+var is_warp_url = false;
+var infinite_loop =false;
+var warp_url = "./"
+var globalBlockCount = 0;
+var blockOfBlocks = [];
+var jumpInProgress = false;
+var currentPlane = 300;
+var levelfloor = 300;
+var onTopOf;
+var spacialCoord = new Array()
+var onGround;
+var downKeyPressed = false;
+var acInc = 0;
+var docURL = document.URL;
+var levelRenderer;
 var xposLeft;
 var inc = 0;
 var lastInc = 0;
