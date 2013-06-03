@@ -26,6 +26,9 @@ var screenLoop = true;
 var mario = null;
 
 $(function(){
+  
+  $('body').focus();
+  
   blockOfBlocks.push(new BlockElement(40, 40, 679, 164, false, 'coin-block'));
   blockOfBlocks.push(new BlockElement(40, 40, 149, 164, false, 'brick-block'));
   blockOfBlocks.push(new BlockElement(40, 40, 300, 164, true, 'brick-block'));
