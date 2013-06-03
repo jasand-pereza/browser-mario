@@ -1,3 +1,7 @@
+body {
+  overflow: hidden;
+}
+
 #mario {
   width: 50px;
   height: 50px;
@@ -54,6 +58,11 @@ legend#controls {
   background-image: url(../graphics/nobreak-block.gif);
   background-repeat: repeat;
 }
+
+div.blockElement.ground.coin-block {
+  background: url(../graphics/coinblock.gif) no-repeat;
+}
+
 .mini_brick {
   width: 20px;
   height: 10px;
@@ -62,6 +71,15 @@ legend#controls {
   z-index: 200;
   background-image: url(../graphics/brickbrown.png);
   background-repeat: repeat;
+}
+
+.coin {
+  width: 100px;
+  height: 100px;
+  display: block;
+  position: absolute;
+  z-index: 200;
+  background: url(../graphics/coin.gif) no-repeat;
 }
 
 .vert_pipe {
